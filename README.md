@@ -22,23 +22,20 @@
 **A FeathersJS Client for Angular!**
 
 ## Installation
-
-```html
-<script src="bower_components/socket.io-client/dist/socket.io.min.js"></script>
-<script src="bower_components/feathers-client/dist/feathers.min.js"></script>
-
-<script src="modules/ngFeathers.js"></script>
-```
-
 ```javascript
 bower install ngFeathers --save
 ```
-
-## Usage
-
+```html
+<script src="bower_components/socket.io-client/dist/socket.io.min.js"></script>
+<script src="bower_components/feathers-client/dist/feathers.min.js"></script>
+<script src="modules/ngFeathers.js"></script>
+```
 ```javascript
 var app = angular.module('myApp', ['ngFeathers']);
 ```
+## Usage
+
+
 ```javascript
 app.factory('messageService', messageService);
 messageService.$inject = ['$feathers'];
