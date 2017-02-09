@@ -1,0 +1,104 @@
+{
+  "name": "feathers-client",
+  "description": "A module that consolidates Feathers client modules for REST (jQuery, Request, Superagent) and Websocket (Socket.io, Primus) connections",
+  "version": "1.9.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/feathersjs/feathers-client.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/feathersjs/feathers-client/issues"
+  },
+  "homepage": "https://github.com/feathersjs/feathers-client",
+  "keywords": [
+    "feathers",
+    "feathers-plugin",
+    "batch",
+    "rest",
+    "api"
+  ],
+  "author": "Feathers contributors",
+  "engines": {
+    "node": ">= 4"
+  },
+  "main": "lib/client.js",
+  "scripts": {
+    "clean": "rimraf dist/ && mkdir -p dist",
+    "browserify:test": "browserify test/browser/test.js -t babelify --outfile dist/browser.test.js",
+    "browserify:dist": "browserify src/client.js -t babelify --standalone feathers --outfile dist/feathers.js",
+    "browserify:min": "browserify src/client.js -t babelify --standalone feathers | uglifyjs > dist/feathers.min.js",
+    "browserify": "npm run browserify:dist && npm run browserify:min && npm run browserify:test",
+    "reinstall": "rm -rf node_modules && npm install",
+    "add-dist": "npm run clean && npm run browserify:dist && npm run browserify:min && git add dist/ --force && git commit -am \"Updating dist\"",
+    "prepublish": "npm run compile",
+    "publish": "git push origin --tags && npm run changelog && git push origin",
+    "bower": "node version && git add bower.json && git commit -am \"Update version\"",
+    "changelog": "github_changelog_generator && git add CHANGELOG.md && git commit -am \"Updating changelog\"",
+    "release:prerelease": "npm run reinstall && npm run add-dist && npm version prerelease && npm run bower && npm publish",
+    "release:patch": "npm run reinstall && npm run add-dist && npm version patch && npm run bower && npm publish",
+    "release:minor": "npm run reinstall && npm run add-dist && npm version minor && npm run bower && npm publish",
+    "release:major": "npm run reinstall && npm run add-dist && npm version major && npm run bower && npm publish",
+    "compile": "rimraf lib/ && babel -d lib/ src/",
+    "watch": "babel --watch -d lib/ src/",
+    "lint": "eslint-if-supported semistandard --fix",
+    "mocha": "mocha --opts mocha.opts",
+    "saucelabs": "grunt",
+    "test": "npm run clean && npm run browserify && npm run lint && npm run coverage",
+    "ci": "npm test && npm run saucelabs",
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- --opts mocha.opts"
+  },
+  "semistandard": {
+    "env": [
+      "mocha"
+    ],
+    "ignore": [
+      "/lib",
+      "/dist"
+    ]
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "browser": {
+    "babel-polyfill": false
+  },
+  "greenkeeper": {
+    "ignore": "jsdom"
+  },
+  "typings": "index.d.ts",
+  "dependencies": {
+    "feathers": "2.0.3",
+    "feathers-authentication": "0.7.12",
+    "feathers-commons": "^0.8.7",
+    "feathers-hooks": "1.7.1",
+    "feathers-primus": "2.0.0",
+    "feathers-rest": "1.6.0",
+    "feathers-socketio": "1.4.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.1.4",
+    "babel-core": "^6.1.4",
+    "babel-plugin-add-module-exports": "^0.2.0",
+    "babel-preset-es2015": "^6.1.4",
+    "babelify": "^7.2.0",
+    "body-parser": "^1.12.4",
+    "browserify": "^13.0.0",
+    "eslint-if-supported": "^1.0.1",
+    "feathers-memory": "^1.0.0",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-saucelabs": "^9.0.0",
+    "istanbul": "^1.1.0-alpha.1",
+    "jsdom": "8.1.0",
+    "mocha": "^3.0.0",
+    "node-fetch": "^1.3.3",
+    "request": "^2.56.0",
+    "rimraf": "^2.5.4",
+    "semistandard": "^9.1.0",
+    "socket.io-client": "^1.7.2",
+    "superagent": "^3.1.0",
+    "uglifyjs": "^2.4.10",
+    "ws": "^1.1.1"
+  }
+}
