@@ -28,7 +28,7 @@ bower install ngFeathers --save
 ```html
 <script src="bower_components/socket.io-client/dist/socket.io.min.js"></script>
 <script src="bower_components/feathers-client/dist/feathers.min.js"></script>
-<script src="modules/ngFeathers.js"></script>
+<script src="bower_components/ngFeathers/ngFeathers.js"></script>
 ```
 ```javascript
 var app = angular.module('myApp', ['ngFeathers']);
