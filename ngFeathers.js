@@ -1,34 +1,52 @@
 (function(){
     var app = angular.module('ngFeathers', [])
-    
-    app.factory('$feathersConfig', function(){
-        var config = {};
-        config.host = 'http://localhost:3030';
-        return config;
-    });
-    
-    
-    
-    app.factory('$feathers', $feathers);
-    $feathers.$inject = ['$feathersConfig'];
-    function $feathers($feathersConfig) {
+
+    app.provider('$feathersConfig', function providerFeathers(){
+        var host = 'http://localhost:3030';
         
-        var db = feathers().configure(feathers.socketio(io($feathersConfig.host)));
+        return({
+            getHost: function(){
+                return host;
+            },
+            setHost: function(newHost){
+                host = newHost;
+            },
+            $get: function() {
+                return this;
+            }
+        });
+    })
+
+    app.factory('$feathers', $feathers);
+    $feathers.$inject = ['$feathersConfig', '$log', '$timeout'];
+    function $feathers($feathersConfig, $log, $timeout) {
+        
+        var db = feathers()
+        .configure(feathers.socketio(io($feathersConfig.getHost())))
+        .configure(feathers.hooks())
+        .configure(feathers.authentication({ storage: window.localStorage }));
         
         db.serve = function(serviceName){
             var service = db.service(serviceName);
         
             service.data = [];
 
-            service.find(function(err, data){
+            service.find({"ingredients":"salt", "$limit":10, "$select": ["name"] },function(err, data){
                 if(err)
-                    console.error(err);
-                else
+                    $log.error(err);
+                else {
+                    
+                    if(Object.prototype.toString.call(data.data) === '[object Array]')
+                        data = data.data;
+                    
+                    $log.log(data);
                     angular.forEach(data, function(val){
                         $timeout(function(){
                             service.data.push(val);
                         });
-                    });
+                    }); 
+                }
+                
             });
 
             service.on('created', function(data){
