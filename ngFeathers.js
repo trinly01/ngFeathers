@@ -101,6 +101,7 @@
             return service;
         }
         
+        db.host = $feathersConfig.getHost();
         return db;
     }
     
