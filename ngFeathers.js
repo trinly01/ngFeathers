@@ -31,7 +31,7 @@
         
             service.data = [];
 
-            service.find({"ingredients":"salt", "$limit":10, "$select": ["name"] },function(err, data){
+            service.find({},function(err, data){
                 if(err)
                     $log.error(err);
                 else {
@@ -39,15 +39,38 @@
                     if(Object.prototype.toString.call(data.data) === '[object Array]')
                         data = data.data;
                     
-                    $log.log(data);
                     angular.forEach(data, function(val){
                         $timeout(function(){
                             service.data.push(val);
                         });
                     }); 
-                }
+                } 
                 
             });
+            
+            service.loadMore = function (query) {
+                
+                if(!query) {
+                    var query = {};
+                    query.$skip = service.data.length; 
+                }
+                    
+                service.find({query: query},function(err, data){
+                    if(err)
+                        $log.error(err);
+                    else {
+
+                        if(Object.prototype.toString.call(data.data) === '[object Array]')
+                            data = data.data;
+                        
+                        angular.forEach(data, function(val){
+                            $timeout(function(){
+                                service.data.push(val);
+                            });
+                        }); 
+                    }
+                });
+            }
 
             service.on('created', function(data){
                 $timeout(function(){
